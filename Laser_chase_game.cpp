@@ -1,6 +1,7 @@
 #include <iostream>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
+#include "Turret.cpp"
 
 using namespace cv;
 using namespace std;
@@ -44,8 +45,7 @@ int main( int argc, char** argv ){
         return -1;
     }
 	
-	//FILE *arduino;
-	//arduino = fopen("/dev/ttyACM0", "w");
+	Turret turret;
 
 	cout << "Enter game mode (chase = 1, run = 2): ";
 	cin >> game_mode;
