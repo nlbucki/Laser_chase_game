@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.8)
+project( Laser_Chase_Proj )
+find_package( OpenCV REQUIRED )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( Laser_chase_game Laser_chase_game.cpp )
+add_executable( CalibrateSystem CalibrateSystem.cpp )
+target_link_libraries( Laser_chase_game ${OpenCV_LIBS} )
+target_link_libraries( CalibrateSystem ${OpenCV_LIBS} )
