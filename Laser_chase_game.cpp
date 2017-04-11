@@ -2,12 +2,14 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "Turret.cpp"
+#include <unistd.h>
 
 using namespace cv;
 using namespace std;
 
 int game_mode;
 int game_difficulty;
+int collisionDist = 10;
 
 // HSV ranges for green laser
 Scalar lowHSVgreen = Scalar(40, 50, 150);
@@ -35,8 +37,8 @@ int cyGreen;
 int cxRed;
 int cyRed;
 
-int pan_error;
-int tilt_error;
+int x_error;
+int y_error;
 
 int main( int argc, char** argv ){
     VideoCapture cam(1); // Get camera 
@@ -46,6 +48,8 @@ int main( int argc, char** argv ){
     }
 	
 	Turret turret;
+	turret.sendAngles(0, 0);
+	turret.turnOnLaser();
 
 	cout << "Enter game mode (chase = 1, run = 2): ";
 	cin >> game_mode;
@@ -94,11 +98,23 @@ int main( int argc, char** argv ){
         //imshow("Original", imgOrig);
         //imshow("Thresholded Image (Green)", imgThreshGreen);
    		//imshow("Thresholded Image (Red)", imgThreshRed);
-		
-		// Chase player mode
-		if(game_mode == 1){
-			pan_error = cyGreen - cyRed;
-			tilt_error = cxGreen - cxRed;
+		x_error = cxGreen - cxRed;
+		y_error = cyGreen - cyRed;
+
+		// Update control law based on game mode and difficulty selected
+		if(game_mode == 1){ // Chase player mode
+			switch(game_difficulty){
+				case 1:
+				case 2:
+					break;
+				case 3:
+					turret.sendPosition(cxGreen, cyGreen);
+					break;
+				default:
+					cout << "error: invalid difficulty selection" << endl;
+					return -1;
+			}
+		} else if(game_mode == 2){ // Run from player mode
 			switch(game_difficulty){
 				case 1:
 				case 2:
@@ -109,11 +125,21 @@ int main( int argc, char** argv ){
 					cout << "error: invalid difficulty selection" << endl;
 					return -1;
 			}
-		} else if(game_mode == 2){
-
 		} else {
 			cout << "error: invalid game mode selection" << endl;
 			return -1;
+		}
+
+		// Detect whether a collision has occured
+		if(sqrt(pow(x_error, 2) + pow(y_error, 2)) <= collisionDist){
+			cout << '\a'; // Beep
+			cout << "Collision detected!" << endl;
+			turret.turnOffLaser();
+			turret.sendAngles(0, 0);
+			int waitSeconds = 3;
+			usleep(waitSeconds * 1000000);
+			turret.turnOnLaser();
+			cout << '\a'; //Beep
 		}
 	}
 

@@ -30,7 +30,7 @@ vector<Vec4i> hierarchy;
 Moments m;
 
 bool getRedDot(int &xLoc, int &yLoc){
-	VideoCapture cam(1); // Get camera
+	VideoCapture cam(0); // Get camera
 	if(!cam.isOpened()){
 		cout << "error: failed to open camera" << endl;
 		return false;
@@ -140,6 +140,7 @@ int main( int argc, char** argv ){
 	angData[3] = panAng * PI/180.0;
 
 	cout << "Calibration routine complete." << endl << endl;
+	turret.turnOffLaser();
 
 	// Perform least squares regression to find d
 	double b;
