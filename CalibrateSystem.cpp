@@ -59,7 +59,7 @@ bool getRedDot(int &xLoc, int &yLoc){
             circle(imgOrig, Point2f(xLoc, yLoc), 5, Scalar(255, 0, 0), -1, 8, 0);
 			stringstream sstm;
 			sstm << "(" << xLoc << ", " << yLoc << ")";
-			putText(imgOrig, sstm.str(), cvPoint(30,30), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255, 255, 255), 1, CV_AA);
+			putText(imgOrig, sstm.str(), cvPoint(0,imgOrig.rows), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(255, 255, 255), 1, CV_AA);
         }
 		
 		// Display images

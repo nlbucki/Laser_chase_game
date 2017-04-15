@@ -13,14 +13,14 @@ int main(int argc, char** argv){
 		turret.readAngles(panAngle, tiltAngle);
 		//cout << "Pan Angle: " << panAngle << endl;
 		//cout << "Tilt Angle: " << tiltAngle << endl;
-		for(int i=1; i < 255; i++){
+		for(int i=-60; i < 60; i++){
 			cout << i << endl;
-			turret.sendAngles(i,0);
+			turret.sendPosition(i,0);
 			usleep(10000);
 		}
-		for(int i=255; i > 0; i--){
+		for(int i=60; i > -60; i--){
 			cout << i << endl;
-			turret.sendAngles(i,0);
+			turret.sendPosition(i,0);
 			usleep(10000);
 		}
 		usleep(waitTime);

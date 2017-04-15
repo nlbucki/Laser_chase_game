@@ -41,12 +41,14 @@ int x_error;
 int y_error;
 
 int main( int argc, char** argv ){
+	cout << "Opening Camera... " << endl;
     VideoCapture cam(1); // Get camera 
     if (!cam.isOpened()){
         cout << "error: failed to open camera" << endl;
         return -1;
     }
 	
+	cout << "Moving to home position... " << endl;
 	Turret turret;
 	turret.sendAngles(0, 0);
 	turret.turnOnLaser();
@@ -85,6 +87,9 @@ int main( int argc, char** argv ){
 			cxGreen = m.m10/m.m00;
 			cyGreen = m.m01/m.m00;
 			circle(imgOrig, Point2f(cxGreen, cyGreen), 5, Scalar(255, 255, 0), -1, 8, 0);
+			stringstream locText;
+			locText << "(" << cxGreen << "," << cyGreen << ")";
+			putText(imgOrig, locText.str(), Point2f(0,imgOrig.rows), FONT_HERSHEY_PLAIN, 5, Scalar(255, 255, 255));
 		}
 		findContours(imgThreshRed, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0,0));
 		if(contours.size() > 0){
@@ -95,11 +100,14 @@ int main( int argc, char** argv ){
 		}
  
 		// Display images
-        //imshow("Original", imgOrig);
-        //imshow("Thresholded Image (Green)", imgThreshGreen);
+        imshow("Original", imgOrig);
+        imshow("Thresholded Image (Green)", imgThreshGreen);
    		//imshow("Thresholded Image (Red)", imgThreshRed);
+		//x_error = cxGreen - cxRed;
+		//y_error = cyGreen - cyRed;
+		turret.readPosition(cxRed, cyRed);
 		x_error = cxGreen - cxRed;
-		y_error = cyGreen - cyRed;
+		y_error - cyGreen - cyRed;
 
 		// Update control law based on game mode and difficulty selected
 		if(game_mode == 1){ // Chase player mode
