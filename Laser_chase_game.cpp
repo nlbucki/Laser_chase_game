@@ -12,7 +12,7 @@ int game_difficulty;
 int collisionDist = 10;
 
 // HSV ranges for green laser
-Scalar lowHSVgreen = Scalar(40, 50, 150);
+Scalar lowHSVgreen = Scalar(40, 90, 150);
 Scalar highHSVgreen = Scalar(110, 255, 255);
 
 // HSV ranges for red laser (Hue is split between start and end of range for red)
@@ -107,7 +107,7 @@ int main( int argc, char** argv ){
 		//y_error = cyGreen - cyRed;
 		turret.readPosition(cxRed, cyRed);
 		x_error = cxGreen - cxRed;
-		y_error - cyGreen - cyRed;
+		y_error = cyGreen - cyRed;
 
 		// Update control law based on game mode and difficulty selected
 		if(game_mode == 1){ // Chase player mode
@@ -139,7 +139,7 @@ int main( int argc, char** argv ){
 		}
 
 		// Detect whether a collision has occured
-		if(sqrt(pow(x_error, 2) + pow(y_error, 2)) <= collisionDist){
+		/*if(sqrt(pow(x_error, 2) + pow(y_error, 2)) <= collisionDist){
 			cout << '\a'; // Beep
 			cout << "Collision detected!" << endl;
 			turret.turnOffLaser();
@@ -148,7 +148,7 @@ int main( int argc, char** argv ){
 			usleep(waitSeconds * 1000000);
 			turret.turnOnLaser();
 			cout << '\a'; //Beep
-		}
+		}*/
 	}
 
     return 0;

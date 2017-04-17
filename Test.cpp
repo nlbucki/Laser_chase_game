@@ -10,24 +10,30 @@ int main(int argc, char** argv){
 	//turret.turnOnLaser();
 	int waitTime = 500000;
 	while(1){
-		turret.readAngles(panAngle, tiltAngle);
-		//cout << "Pan Angle: " << panAngle << endl;
-		//cout << "Tilt Angle: " << tiltAngle << endl;
 		for(int i=-60; i < 60; i++){
 			cout << i << endl;
-			turret.sendPosition(i,0);
-			usleep(10000);
+			turret.sendAngles(i,i);
+			//usleep(50000);
+			cin.ignore();
+			//turret.readAngles(panAngle, tiltAngle);
+			//cout << "Pan Angle: " << panAngle << "\tTilt Angle: " << tiltAngle << endl;
 		}
 		for(int i=60; i > -60; i--){
 			cout << i << endl;
-			turret.sendPosition(i,0);
-			usleep(10000);
+			turret.sendAngles(i,i);
+			//usleep(50000);
+			cin.ignore();
+			//turret.readAngles(panAngle, tiltAngle);
+			//cout << "Pan Angle: " << panAngle << "\tTilt Angle: " << tiltAngle << endl;
 		}
-		usleep(waitTime);
-		turret.turnOnLaser();
-		usleep(waitTime);
-		turret.turnOffLaser();
-		usleep(waitTime);
+		//turret.sendPosition(0,0);
+		//usleep(waitTime);
+		//turret.turnOnLaser();
+		//usleep(waitTime);
+		//cin.ignore();
+		//turret.turnOffLaser();
+		//cin.ignore();
+		//usleep(waitTime);*/
 	}
 	return 0;
 }

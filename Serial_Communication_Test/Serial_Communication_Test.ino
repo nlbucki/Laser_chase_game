@@ -11,14 +11,15 @@ void setup() {
   Serial.begin(115200);
   Serial.setTimeout(50);
   lcd.begin(16,2);
-  panServo.attach(9);
+  panServo.attach(5);
+  tiltServo.attach(6);
 }
 
 void loop() {
   if(Serial.available() > 0){
     String input = Serial.readStringUntil('\n');
-    lcd.clear();
-    lcd.print(input);
+    //lcd.clear();
+    //lcd.print(input);
     if(input == "ON"){
       digitalWrite(LED_BUILTIN, HIGH);
     } else if(input == "OFF") {
@@ -31,6 +32,7 @@ void loop() {
       String tilt = Serial.readStringUntil('\n');
       //lcd.print(pan + "," + tilt);
       panServo.write(pan.toInt());
+      tiltServo.write(tilt.toInt());
     }
   }
   Serial.print(analogRead(panAngle));

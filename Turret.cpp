@@ -50,8 +50,8 @@ void Turret::sendAngles(double panAngle, double tiltAngle){
 	// Angles should be given in degrees 
 
 	// Map desired angle to motor command
-	int panPWM = map(panAngle, -60, 60, 0, 255);
-	int tiltPWM = map(tiltAngle, -60, 60, 0, 255);
+	int panPWM = map(panAngle, -60, 60, 0, 140);
+	int tiltPWM = map(tiltAngle, -60, 60, 0, 140);
 	fprintf(arduinoWrite, "ANGLE\n%d\n%d\n", panPWM, tiltPWM);
 }
 
@@ -78,7 +78,7 @@ void Turret::sendPosition(int xLoc, int yLoc){
 void Turret::readAngles(double &panAngle, double &tiltAngle){
 	// Reads angle values from arduino and outputs pan and tilt angles in degrees
 
-	char str [50];
+	char str [100];
 	// Read until the end of the file is reached so that the most recent angles are read (instead of reading old data)
 	while(fgets(str, 100, arduinoRead) != NULL){}
 	// Extract joint angles

@@ -6,6 +6,7 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "Turret.cpp"
 #include "llsq.cpp"
+#include <unistd.h>
 
 #define PI 3.14159265
 
@@ -15,7 +16,7 @@ using namespace std;
 int xHome, yHome;
 double d;
 
-double calibAngles [4] = {30, 30, 30, 30}; // {Top, Right, Bottom, Left}
+double calibAngles [4] = {15, 15, -15, -15}; // {Top, Right, Bottom, Left}
 bool dotReadSuccess;
 
 // HSV ranges for red laser (Hue is split between start and end of range for red)
@@ -30,7 +31,7 @@ vector<Vec4i> hierarchy;
 Moments m;
 
 bool getRedDot(int &xLoc, int &yLoc){
-	VideoCapture cam(0); // Get camera
+	VideoCapture cam(1); // Get camera
 	if(!cam.isOpened()){
 		cout << "error: failed to open camera" << endl;
 		return false;
@@ -95,49 +96,53 @@ int main( int argc, char** argv ){
 	cout << "Top" << endl;
 	turret.sendAngles(0, calibAngles[0]); // Move turret to top edge, no pan
 	dotReadSuccess = getRedDot(xLoc, yLoc); // Record y location of dot
+	cout << "Recorded (" << xLoc << "," << yLoc << ")" << endl;
 	if(!dotReadSuccess){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
 	turret.readAngles(panAng, tiltAng); // Record angle at top edge
-	posData[0] = yLoc - yHome; // Convert y location to be relative to home position
-	angData[0] = tiltAng * PI/180.0; // Convert to radians
+	posData[0] = -(yLoc - yHome); // Convert y location to be relative to home position
+	angData[0] = calibAngles[0] * PI/180.0; // Convert to radians
 
 	// Record data for right point
 	cout << "Right" << endl;
 	turret.sendAngles(calibAngles[1], 0);
 	dotReadSuccess = getRedDot(xLoc, yLoc);
+	cout << "Recorded (" << xLoc << "," << yLoc << ")" << endl;
 	if(!dotReadSuccess){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
 	turret.readAngles(panAng, tiltAng);
 	posData[1] = xLoc - xHome;
-	angData[1] = panAng * PI/180.0;
+	angData[1] = calibAngles[1] * PI/180.0;
 
 	// Record data for bottom point
 	cout << "Bottom" << endl;
 	turret.sendAngles(0, calibAngles[2]); 
 	dotReadSuccess = getRedDot(xLoc, yLoc);
+	cout << "Recorded (" << xLoc << "," << yLoc << ")" << endl;
 	if(!dotReadSuccess){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
 	turret.readAngles(panAng, tiltAng);
-	posData[2] = yLoc - yHome;
-	angData[2] = tiltAng * PI/180.0;
+	posData[2] = -(yLoc - yHome);
+	angData[2] = calibAngles[2] * PI/180.0;
 
 	// Record data for left point
 	cout << "Left" << endl;
 	turret.sendAngles(calibAngles[3], 0);
 	dotReadSuccess = getRedDot(xLoc, yLoc);
+	cout << "Recorded (" << xLoc << "," << yLoc << ")" << endl;
 	if(!dotReadSuccess){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
 	turret.readAngles(panAng, tiltAng);
 	posData[3] = xLoc - xHome;
-	angData[3] = panAng * PI/180.0;
+	angData[3] = calibAngles[3] * PI/180.0;
 
 	cout << "Calibration routine complete." << endl << endl;
 	turret.turnOffLaser();
