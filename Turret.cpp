@@ -26,6 +26,7 @@ class Turret
 		void readPosition(int &xLoc, int &yLoc);
         void turnOnLaser();
         void turnOffLaser();
+		void getHomePos(int &xHo, int &yHo);
 };
 
 Turret::Turret(){
@@ -43,7 +44,7 @@ Turret::Turret(){
 	if(arduinoRead == NULL || arduinoWrite == NULL){
 		cout << "error: failed to open serial port to arduino" << endl;
 	}
-	usleep(3000000);// Wait in case Arduino resets when serial port opens	
+	usleep(2000000);// Wait in case Arduino resets when serial port opens	
 }
 
 void Turret::sendAngles(double panAngle, double tiltAngle){
@@ -78,9 +79,9 @@ void Turret::sendPosition(int xLoc, int yLoc){
 void Turret::readAngles(double &panAngle, double &tiltAngle){
 	// Reads angle values from arduino and outputs pan and tilt angles in degrees
 
-	char str [100];
+	char str [50];
 	// Read until the end of the file is reached so that the most recent angles are read (instead of reading old data)
-	while(fgets(str, 100, arduinoRead) != NULL){}
+	while(fgets(str, 50, arduinoRead) != NULL){}
 	// Extract joint angles
 	string s = str;
 	string panAngStr = s.substr(0, s.find(","));
@@ -91,8 +92,9 @@ void Turret::readAngles(double &panAngle, double &tiltAngle){
 	tiltAngle = atof(tiltAngStr.c_str());
 	
 	// Convert angles to degrees
-	panAngle = map(panAngle, 0, 1023, -60, 60);
-	tiltAngle = map(tiltAngle, 0, 1023, -60, 60);
+	//cout << "panAng: " << panAngle << "\t\t tiltAng: " << tiltAngle << endl;
+	panAngle = map(panAngle, 146, 455, -60, 60);
+	tiltAngle = map(tiltAngle, 140, 445, -60, 60);
 }
 
 void Turret::readPosition(int &xLoc, int &yLoc){
@@ -128,4 +130,9 @@ void Turret::turnOffLaser(){
 double Turret::map(double val, double in_min, double in_max, double out_min, double out_max){
 	// Linear map from one range of values to another
 	return (val - in_min)*(out_max - out_min)/(in_max - in_min) + out_min;
+}
+
+void Turret::getHomePos(int &xHo, int &yHo){
+	xHo = xHome;
+	yHo = yHome;
 }

@@ -16,7 +16,7 @@ using namespace std;
 int xHome, yHome;
 double d;
 
-double calibAngles [4] = {15, 15, -15, -15}; // {Top, Right, Bottom, Left}
+double calibAngles [4] = {15, 15, -5, -15}; // {Top, Right, Bottom, Left}
 bool dotReadSuccess;
 
 // HSV ranges for red laser (Hue is split between start and end of range for red)
@@ -71,6 +71,7 @@ bool getRedDot(int &xLoc, int &yLoc){
 }
 
 int main( int argc, char** argv ){
+	system("stty -F /dev/ttyUSB0 cs8 115200 ignbrk -brkint -icrnl -imaxbel -opost -onlcr -isig -icanon -iexten -echo -echoe -echok -echoctl -echoke noflsh -ixon -crtscts");
 	cout << "Starting calibration routine..." << endl;
 	Turret turret;
 	turret.turnOnLaser();
@@ -101,7 +102,6 @@ int main( int argc, char** argv ){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
-	turret.readAngles(panAng, tiltAng); // Record angle at top edge
 	posData[0] = -(yLoc - yHome); // Convert y location to be relative to home position
 	angData[0] = calibAngles[0] * PI/180.0; // Convert to radians
 
@@ -114,7 +114,6 @@ int main( int argc, char** argv ){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
-	turret.readAngles(panAng, tiltAng);
 	posData[1] = xLoc - xHome;
 	angData[1] = calibAngles[1] * PI/180.0;
 
@@ -127,7 +126,6 @@ int main( int argc, char** argv ){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
-	turret.readAngles(panAng, tiltAng);
 	posData[2] = -(yLoc - yHome);
 	angData[2] = calibAngles[2] * PI/180.0;
 
@@ -140,7 +138,6 @@ int main( int argc, char** argv ){
 		cout << "error: failed to read dot location" << endl;
 		return -1;
 	}
-	turret.readAngles(panAng, tiltAng);
 	posData[3] = xLoc - xHome;
 	angData[3] = calibAngles[3] * PI/180.0;
 

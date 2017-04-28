@@ -7,24 +7,22 @@ using namespace std;
 int main(int argc, char** argv){
 	Turret turret;
 	double panAngle, tiltAngle;
-	//turret.turnOnLaser();
-	int waitTime = 500000;
+	turret.turnOnLaser();
+	int waitTime = 40000;
 	while(1){
 		for(int i=-60; i < 60; i++){
 			cout << i << endl;
 			turret.sendAngles(i,i);
-			//usleep(50000);
-			cin.ignore();
 			//turret.readAngles(panAngle, tiltAngle);
-			//cout << "Pan Angle: " << panAngle << "\tTilt Angle: " << tiltAngle << endl;
+			//cout << panAngle << "," << tiltAngle << endl;
+			//cin.ignore();
+			usleep(waitTime);
 		}
 		for(int i=60; i > -60; i--){
 			cout << i << endl;
 			turret.sendAngles(i,i);
-			//usleep(50000);
-			cin.ignore();
-			//turret.readAngles(panAngle, tiltAngle);
-			//cout << "Pan Angle: " << panAngle << "\tTilt Angle: " << tiltAngle << endl;
+			//cin.ignore();
+			usleep(waitTime);
 		}
 		//turret.sendPosition(0,0);
 		//usleep(waitTime);
